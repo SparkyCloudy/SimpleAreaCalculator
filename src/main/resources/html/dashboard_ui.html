@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculation Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+  <h1 class="text-2xl font-bold mb-4">Calculation Dashboard</h1>
+
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold">Total Calculations</h2>
+    <p class="text-lg">Total: <!-- TOTAL_CALCULATIONS --></p>
+  </div>
+
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold">Maximum Calculation Value</h2>
+    <p class="text-lg">Max: <!-- MAX_CALCULATION --></p>
+  </div>
+
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold">Minimum Calculation Value</h2>
+    <p class="text-lg">Min: <!-- MIN_CALCULATION --></p>
+  </div>
+
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold">Percentage of Calculations by Shape</h2>
+    <p class="text-lg">Triangle: <!-- PERCENTAGE_TRIANGLE -->%</p>
+    <p class="text-lg">Square: <!-- PERCENTAGE_SQUARE -->%</p>
+    <p class="text-lg">Circle: <!-- PERCENTAGE_CIRCLE -->%</p>
+  </div>
+
+  <div class="mb-4">
+    <label for="reverseOrder" class="inline-flex items-center">
+      <input type="checkbox" id="reverseOrder" onclick="toggleReverseOrder()"
+             class="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out">
+      <span class="ml-2 text-gray-700">Reverse Order</span>
+    </label>
+  </div>
+
+  <ul id="historyList">
+    <!-- List of calculations -->
+  </ul>
+
+  <div class="mt-6">
+    <a href="http://localhost:8080/area-calculation"
+       class="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Area Calculation
+    </a>
+  </div>
+</div>
+
+<script>
+  function toggleReverseOrder() {
+    const checkbox = document.getElementById('reverseOrder');
+    const url = new URL(window.location.href);
+    if (checkbox.checked) {
+      url.searchParams.set('reverse', 'true');
+      localStorage.setItem('reverseOrder', 'true');
+    } else {
+      url.searchParams.delete('reverse');
+      localStorage.setItem('reverseOrder', 'false');
+    }
+    window.location.href = url.toString();
+  }
+
+  function loadReverseOrderState() {
+    const reverseOrder = localStorage.getItem('reverseOrder') === 'true';
+    const checkbox = document.getElementById('reverseOrder');
+    checkbox.checked = reverseOrder;
+    const url = new URL(window.location.href);
+    if (reverseOrder && !url.searchParams.has('reverse')) {
+      url.searchParams.set('reverse', 'true');
+      window.location.href = url.toString();
+    }
+  }
+
+  window.onload = loadReverseOrderState;
+</script>
+</body>
+</html>

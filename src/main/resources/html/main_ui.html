@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Area Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+  <h1 class="text-2xl font-bold mb-4">Area Calculator</h1>
+  <label for="shape" class="block text-sm font-medium text-gray-700">Select Shape:</label>
+  <select id="shape" onchange="showInputs()"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+    <option value="triangle">Triangle</option>
+    <option value="square">Square</option>
+    <option value="circle">Circle</option>
+  </select>
+
+  <form id="areaForm" action="/area-calculation" method="post">
+    <label for="shape-id" hidden>shape-id</label>
+    <input id="shape-id" type="text" name="shape-id" hidden>
+
+    <div id="triangleInputs" class="mt-4" style="display:none;">
+      <label for="triangleBase" class="block text-sm font-medium text-gray-700">Base:</label>
+      <input type="number" min="0.01" step="0.01" id="triangleBase" name="triangleBase"
+             class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+      <label for="triangleHeight"
+             class="block text-sm font-medium text-gray-700 mt-2">Height:</label>
+      <input type="number" min="0.01" step="0.01" id="triangleHeight" name="triangleHeight"
+             class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+
+    <div id="squareInputs" class="mt-4" style="display:none;">
+      <label for="squareSide" class="block text-sm font-medium text-gray-700">Side:</label>
+      <input type="number" step="0.01" id="squareSide" name="squareSide"
+             class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+
+    <div id="circleInputs" class="mt-4" style="display:none;">
+      <label for="circleRadius" class="block text-sm font-medium text-gray-700">Radius:</label>
+      <input type="number" step="0.01" id="circleRadius" name="circleRadius"
+             class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+
+    <p id="result" class="mt-4 text-lg font-medium text-gray-700">Area: <!-- Result --></p>
+
+    <button type="submit"
+            class="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Calculate
+    </button>
+
+    <a href="http://localhost:8080/dashboard">
+      <div
+          class="text-center border-2 border-indigo-600 mt-4 w-full text-indigo-600 py-2 px-4 rounded-md shadow-sm hover:bg-indigo-100 hover:text-indigo focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        Dashboard
+      </div>
+    </a>
+  </form>
+
+</div>
+
+<script>
+  function showInputs() {
+    const shape = document.getElementById('shape').value;
+    document.getElementById('triangleInputs').style.display = 'none';
+    document.getElementById('squareInputs').style.display = 'none';
+    document.getElementById('circleInputs').style.display = 'none';
+
+    document.getElementById('triangleBase').disabled = true;
+    document.getElementById('triangleHeight').disabled = true;
+    document.getElementById('triangleBase').removeAttribute('required');
+    document.getElementById('triangleHeight').removeAttribute('required');
+
+    document.getElementById('squareSide').disabled = true;
+    document.getElementById('squareSide').removeAttribute('required');
+
+    document.getElementById('circleRadius').disabled = true;
+    document.getElementById('circleRadius').removeAttribute('required');
+
+    if (shape === 'triangle') {
+      document.getElementById('triangleInputs').style.display = 'block';
+      document.getElementById('triangleBase').disabled = false;
+      document.getElementById('triangleHeight').disabled = false;
+      document.getElementById('triangleBase').setAttribute('required', 'required');
+      document.getElementById('triangleHeight').setAttribute('required', 'required');
+    } else if (shape === 'square') {
+      document.getElementById('squareInputs').style.display = 'block';
+      document.getElementById('squareSide').disabled = false;
+      document.getElementById('squareSide').setAttribute('required', 'required');
+    } else if (shape === 'circle') {
+      document.getElementById('circleInputs').style.display = 'block';
+      document.getElementById('circleRadius').disabled = false;
+      document.getElementById('circleRadius').setAttribute('required', 'required');
+    }
+
+    document.getElementById('shape-id').setAttribute('value', shape);
+    localStorage.setItem('shape-selection', shape);
+  }
+
+  function loadSelection() {
+    const shape = localStorage.getItem('shape-selection');
+    if (shape) {
+      document.getElementById('shape').value = shape;
+      showInputs();
+    }
+  }
+
+  window.onload = loadSelection;
+</script>
+</body>
+</html>
